@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Property;
+use App\Entity\PropertySearch;
+
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -24,11 +27,24 @@ class PropertyRepository extends ServiceEntityRepository {
     /**
      * @return Property[]
      */
-    public function findAllNotSold(): array {
-      return $this->findNotSoldQuery()
-        ->getQuery()
-        ->getResult();
+    public function findAllNotSoldQuery(PropertySearch $search) {
+      $query = $this->findNotSoldQuery();
+
+      if($search->getMaxPrice()) {
+        $query = $query
+          ->andwhere('p.price <= :maxprice')
+          ->setParameter('maxprice', $search->getMaxPrice());
+      }
+
+      if($search->getMinSurface()) {
+        $query = $query
+          ->andwhere('p.surface >= :minsurface')
+          ->setParameter('minsurface', $search->getMinSurface());
+      }
+
+      return $query->getQuery();
     }
+
 
     /**
      * @return Property[]
@@ -41,6 +57,10 @@ class PropertyRepository extends ServiceEntityRepository {
     }
 
 
+    /**
+     * Fetch all properties not sold
+     * @return properties[]
+     */
     private function findNotSoldQuery() {
       return $this->createQueryBuilder('p')
         ->where('p.sold = false');
