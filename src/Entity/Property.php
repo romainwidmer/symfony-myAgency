@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Cocur\Slugify\Slugify;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -93,9 +95,15 @@ class Property {
      */
     private $zip_code;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Feature", inversedBy="properties")
+     */
+    private $features;
+
 
     public function __construct() {
       $this->created_at = new \DateTime();
+      $this->features = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -267,6 +275,34 @@ class Property {
     public function setZipCode(string $zip_code): self
     {
         $this->zip_code = $zip_code;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Feature[]
+     */
+    public function getFeatures(): Collection
+    {
+        return $this->features;
+    }
+
+    public function addOption(Option $feature): self
+    {
+        if (!$this->$features->contains($feature)) {
+            $this->$features[] = $feature;
+            $feature->addProperty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeature(Feature $feature): self
+    {
+        if ($this->$features->contains($feature)) {
+            $this->$features->removeElement($feature);
+            $feature->removeProperty($this);
+        }
 
         return $this;
     }

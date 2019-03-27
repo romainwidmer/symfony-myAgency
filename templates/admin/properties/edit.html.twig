@@ -1,10 +1,12 @@
 {% extends 'base.html.twig' %}
+{% block title 'Edit property' %}
 
 {% block body %}
+
   <div class="container mt-4">
     <h2>Edit the property</h2>
 
-    {{ include('admin/properties/_form.html.twig', {button: 'Save'}) }}
-
+    {{ include('admin/properties/_form.html.twig', {button: 'Update'}) }}
   </div>
+
 {% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block title 'New Feature' %}
+
+{% block body %}
+
+  <div class="container mt-4">
+    <h1>Create new Feature</h1>
+
+    {{ include('admin/feature/_form.html.twig', {button: 'Create'}) }}
+  </div>
+
+{% endblock %}

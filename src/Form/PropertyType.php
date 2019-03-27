@@ -3,10 +3,14 @@
 namespace App\Form;
 
 use App\Entity\Property;
+use App\Entity\Feature;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class PropertyType extends AbstractType
 {
@@ -27,6 +31,11 @@ class PropertyType extends AbstractType
             ->add('address')
             ->add('sold')
             ->add('zip_code')
+            ->add('features', EntityType::class, [
+              'class' => Feature::class,
+              'choice_label' => 'name',
+              'multiple' => true
+            ])
         ;
     }
 
